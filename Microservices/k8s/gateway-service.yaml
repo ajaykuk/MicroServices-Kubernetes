@@ -1,0 +1,128 @@
+# ==========================================
+# 4. GATEWAY SERVICE (Port 3003)
+# ==========================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-proxy-config
+  namespace: default
+  labels:
+    app: gateway-service
+    part-of: ecommerce-platform
+data:
+  USER_SERVICE_URL: "http://user-service.default.svc.cluster.local:3000"
+  PRODUCT_SERVICE_URL: "http://product-service.default.svc.cluster.local:3001"
+  ORDER_SERVICE_URL: "http://order-service.default.svc.cluster.local:3002"
+  proxy.conf: |
+    upstream user_backend {
+        server user-service.default.svc.cluster.local:3000;
+    }
+    upstream product_backend {
+        server product-service.default.svc.cluster.local:3001;
+    }
+    upstream order_backend {
+        server order-service.default.svc.cluster.local:3002;
+    }
+
+    server {
+        listen 3003;
+
+        location = /health {
+            return 200 "OK\n";
+        }
+        location /api/users {
+            proxy_pass http://user_backend/users;
+        }
+        location /api/products {
+            proxy_pass http://product_backend/products;
+        }
+        location /api/orders {
+            proxy_pass http://order_backend/orders;
+        }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-service
+  namespace: default
+  labels:
+    app: gateway-service
+    tier: edge
+    part-of: ecommerce-platform
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: gateway-service
+      tier: edge
+  template:
+    metadata:
+      labels:
+        app: gateway-service
+        tier: edge
+        part-of: ecommerce-platform
+    spec:
+      containers:
+        - name: gateway-service
+          image: malikaj/gateway-service:1.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http-proxy
+              containerPort: 3003
+              protocol: TCP
+          env:
+            - name: PORT
+              value: "3003"
+            - name: GATEWAY_PORT
+              value: "3003"
+            - name: USER_SERVICE_URL
+              value: "http://user-service.default.svc.cluster.local:3000"
+            - name: PRODUCT_SERVICE_URL
+              value: "http://product-service.default.svc.cluster.local:3001"
+            - name: ORDER_SERVICE_URL
+              value: "http://order-service.default.svc.cluster.local:3002"
+            - name: PROXY_TIMEOUT_MS
+              value: "5000"
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http-proxy
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http-proxy
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway-service
+  namespace: default
+  labels:
+    app: gateway-service
+    part-of: ecommerce-platform
+spec:
+  type: ClusterIP
+  selector:
+    app: gateway-service
+    tier: edge
+  ports:
+    - name: http
+      protocol: TCP
+      port: 3003
+      targetPort: 3003

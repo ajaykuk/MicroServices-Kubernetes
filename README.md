@@ -71,6 +71,8 @@ This document provides details on testing various services after running the `do
    ```
 2. kubectl apply -f Microservices/k8s/
 
-3. Once the services are running, use the above endpoints to verify the functionality.
+3. Test your microservices using: kubectl port-forward svc/gateway-service 3003:3003
+
+4. Once the services are running, use the above endpoints to verify the functionality.
 
 Happy testing!
