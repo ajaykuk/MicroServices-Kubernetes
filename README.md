@@ -1,6 +1,7 @@
 # Microservices-Task
 
 ## Overview
+
 This document provides details on testing various services after running the `docker-compose` file. These services include User, Product, Order, and Gateway Services. Each service has its own endpoints for testing purposes.
 
 ---
@@ -8,9 +9,10 @@ This document provides details on testing various services after running the `do
 ## Services and Endpoints
 
 ### **User Service**
+
 - **Base URL:** `http://localhost:3000`
 - **Endpoints:**
-  - **List Users:**  
+  - **List Users:**
     ```
     curl http://localhost:3000/users
     ```
@@ -19,9 +21,10 @@ This document provides details on testing various services after running the `do
 ---
 
 ### **Product Service**
+
 - **Base URL:** `http://localhost:3001`
 - **Endpoints:**
-  - **List Products:**  
+  - **List Products:**
     ```
     curl http://localhost:3001/products
     ```
@@ -30,9 +33,10 @@ This document provides details on testing various services after running the `do
 ---
 
 ### **Order Service**
+
 - **Base URL:** `http://localhost:3002`
 - **Endpoints:**
-  - **List Orders:**  
+  - **List Orders:**
     ```
     curl http://localhost:3002/orders
     ```
@@ -41,17 +45,18 @@ This document provides details on testing various services after running the `do
 ---
 
 ### **Gateway Service**
+
 - **Base URL:** `http://localhost:3003/api`
 - **Endpoints:**
-  - **Users:**  
+  - **Users:**
     ```
     curl http://localhost:3003/api/users
     ```
-  - **Products:**  
+  - **Products:**
     ```
     curl http://localhost:3003/api/products
     ```
-  - **Orders:**  
+  - **Orders:**
     ```
     curl http://localhost:3003/api/orders
     ```
@@ -59,10 +64,13 @@ This document provides details on testing various services after running the `do
 ---
 
 ## Instructions
+
 1. Start all services using the `docker-compose` file:
    ```
-   docker-compose up
+   docker-compose up or build multiple files.
    ```
-2. Once the services are running, use the above endpoints to verify the functionality.
+2. kubectl apply -f Microservices/k8s/
+
+3. Once the services are running, use the above endpoints to verify the functionality.
 
 Happy testing!
