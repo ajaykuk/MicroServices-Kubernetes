@@ -67,7 +67,7 @@ This document provides details on testing various services after running the `do
 
 1. Start all services using the `docker-compose` file:
    ```
-   docker-compose up or build multiple files.
+   docker-compose up or build multiple files and docker push (uploads image to docker registry).
    ```
 2. kubectl apply -f Microservices/k8s/
 
