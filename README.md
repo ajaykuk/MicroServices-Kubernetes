@@ -66,13 +66,18 @@ This document provides details on testing various services after running the `do
 ## Instructions
 
 1. Start all services using the `docker-compose` file:
+
    ```
    docker-compose up or build multiple files and docker push (uploads image to docker registry).
+
    ```
-2. kubectl apply -f Microservices/k8s/
 
-3. Test your microservices using: kubectl port-forward svc/gateway-service 3003:3003
+2. Do minikube start
 
-4. Once the services are running, use the above endpoints to verify the functionality.
+3. kubectl apply -f Microservices/k8s/
+
+4. Test your microservices using: kubectl port-forward svc/gateway-service 3003:3003
+
+5. Once the services are running, use the above endpoints to verify the functionality.
 
 Happy testing!
