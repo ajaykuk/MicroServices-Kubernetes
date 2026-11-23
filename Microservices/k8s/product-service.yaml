@@ -78,7 +78,7 @@ metadata:
     app: product-service
     part-of: ecommerce-platform
 spec:
-  type: ClusterIP
+  type: NodePort
   selector:
     app: product-service
     tier: backend
